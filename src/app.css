@@ -1,0 +1,64 @@
+*{
+  padding: 0;
+  margin: 0;
+}
+
+body{
+  background-color: #f5f4f4;
+}
+
+.btn{
+  transition: 400ms;
+  background-color: rgb(252, 209, 130);
+  font-weight: bold;
+  color: #222;
+  border: none;
+  height: 2rem;
+  padding: .5rem;
+  border-radius: .5rem;
+}
+
+.btn:hover{
+  transition: 300ms;
+  background-color: rgb(253, 190, 72);
+  box-shadow: 0px 2px 6px 1px #222;
+}
+
+.container{
+  display: flex;
+  justify-content: center;
+  padding-top: 5rem;
+}
+
+table caption{
+  padding: 1rem 0;
+}
+
+table{
+  border-spacing: 15px;
+  border: 2px solid #1b1b1b;
+}
+
+.add-btn-wrapper{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+form{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+form input{
+  outline: none;
+  border: 1px solid #eee;
+  border-radius: .25rem;
+  padding: .2rem;
+}
+
+.hidden{
+  display: none;
+}
