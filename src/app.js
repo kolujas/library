@@ -1,4 +1,4 @@
-const myLibrary = [];
+let myLibrary = [];
 const tbody = document.querySelector("tbody");
 const addBookBtn = document.querySelector(".add-book-btn");
 const form = document.querySelector("form");
@@ -54,6 +54,24 @@ function showBooks(array) {
     }
 
     tr.appendChild(cellRead);
+
+    const cellDelete = document.createElement("td");
+    tr.appendChild(cellDelete);
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.classList.add("delete-btn");
+    deleteBtn.textContent = "Eliminar poronga";
+
+    cellDelete.appendChild(deleteBtn);
+
+    const cellToggleRead = document.createElement("td");
+    tr.appendChild(cellToggleRead);
+
+    const toggleRead = document.createElement("input");
+    toggleRead.classList.add("toggle-read-btn");
+    toggleRead.type = "checkbox";
+
+    cellToggleRead.appendChild(toggleRead);
   });
 }
 
@@ -74,3 +92,21 @@ form.addEventListener("submit", (e) => {
 
   form.reset();
 });
+
+tbody.addEventListener("click", (e) => {
+  if (e.target.classList.contains("delete-btn")) {
+    const removeBook = e.target.closest("tr").dataset.id;
+
+    myLibrary = myLibrary.filter((book) => book.id !== removeBook);
+    showBooks(myLibrary);
+  } else if (e.target.classList.contains("toggle-read-btn")) {
+    const changeBook = e.target.closest("tr").dataset.id;
+    const changeBookStatus = myLibrary.find((book) => book.id == changeBook);
+    changeBookStatus.toggleReadStatus();
+    showBooks(myLibrary);
+  }
+});
+
+Book.prototype.toggleReadStatus = function () {
+  this.read = !this.read;
+};
