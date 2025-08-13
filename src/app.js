@@ -48,9 +48,9 @@ function showBooks(array) {
     cellRead.textContent = book.read;
 
     if (book.read) {
-      cellRead.textContent = "Libro leído";
+      cellRead.textContent = "not read";
     } else {
-      cellRead.textContent = "Nadie leyó esta poronga";
+      cellRead.textContent = "Read";
     }
 
     tr.appendChild(cellRead);
@@ -60,7 +60,7 @@ function showBooks(array) {
 
     const deleteBtn = document.createElement("button");
     deleteBtn.classList.add("delete-btn");
-    deleteBtn.textContent = "Eliminar poronga";
+    deleteBtn.textContent = "Delete book";
 
     cellDelete.appendChild(deleteBtn);
 
