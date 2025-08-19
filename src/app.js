@@ -1,4 +1,3 @@
-let myLibrary = [];
 const tbody = document.querySelector("tbody");
 const addBookBtn = document.querySelector(".add-book-btn");
 const form = document.querySelector("form");
@@ -8,72 +7,96 @@ const authorInput = document.querySelector("#author");
 const pagesInput = document.querySelector("#pages");
 const readInput = document.querySelector("#read");
 
-// Valor
+let myLibrary = [];
 
-function Book(title, author, pages, read) {
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.read = read;
-  this.id = crypto.randomUUID();
+class Book {
+  constructor(title, author, pages, read) {
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
+    this.read = read;
+    this.id = crypto.randomUUID();
+  }
+
+  toggleReadStatus() {
+    this.read = !this.read;
+  }
 }
 
-function addBookToLibrary(title, author, pages, read) {
-  const nuevoLibro = new Book(title, author, pages, read);
+class Library {
+  constructor(myLibrary) {
+    this.myLibrary = myLibrary;
+  }
 
-  myLibrary.push(nuevoLibro);
-}
+  addBookToLibrary(title, author, pages, read) {
+    const nuevoLibro = new Book(title, author, pages, read);
+    this.myLibrary.push(nuevoLibro);
+  }
 
-function showBooks(array) {
-  tbody.innerHTML = "";
-  array.forEach((book) => {
-    console.log(book);
-    const tr = document.createElement("tr");
-    tbody.appendChild(tr);
-    tr.dataset.id = book.id;
+  showBooks() {
+    tbody.innerHTML = "";
+    this.myLibrary.forEach((book) => {
+      console.log(book);
+      const tr = document.createElement("tr");
+      tbody.appendChild(tr);
+      tr.dataset.id = book.id;
 
-    const cellTitle = document.createElement("td");
-    cellTitle.textContent = book.title;
-    tr.appendChild(cellTitle);
+      const cellTitle = document.createElement("td");
+      cellTitle.textContent = book.title;
+      tr.appendChild(cellTitle);
 
-    const cellAuthor = document.createElement("td");
-    cellAuthor.textContent = book.author;
-    tr.appendChild(cellAuthor);
+      const cellAuthor = document.createElement("td");
+      cellAuthor.textContent = book.author;
+      tr.appendChild(cellAuthor);
 
-    const cellPages = document.createElement("td");
-    cellPages.textContent = book.pages;
-    tr.appendChild(cellPages);
+      const cellPages = document.createElement("td");
+      cellPages.textContent = book.pages;
+      tr.appendChild(cellPages);
 
-    const cellRead = document.createElement("td");
-    cellRead.textContent = book.read;
+      const cellRead = document.createElement("td");
+      cellRead.textContent = book.read;
 
-    if (book.read) {
-      cellRead.textContent = "not read";
-    } else {
-      cellRead.textContent = "Read";
+      if (book.read) {
+        cellRead.textContent = "not read";
+      } else {
+        cellRead.textContent = "Read";
+      }
+
+      tr.appendChild(cellRead);
+
+      const cellDelete = document.createElement("td");
+      tr.appendChild(cellDelete);
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.classList.add("delete-btn");
+      deleteBtn.textContent = "Delete book";
+
+      cellDelete.appendChild(deleteBtn);
+
+      const cellToggleRead = document.createElement("td");
+      tr.appendChild(cellToggleRead);
+
+      const toggleRead = document.createElement("input");
+      toggleRead.classList.add("toggle-read-btn");
+      toggleRead.type = "checkbox";
+
+      cellToggleRead.appendChild(toggleRead);
+    });
+  }
+
+  removeBookById(bookId) {
+    this.myLibrary = this.myLibrary.filter((book) => book.id !== bookId);
+  }
+
+  toggleBookReadStatus(bookId) {
+    const bookToToggle = this.myLibrary.find((book) => book.id === bookId);
+    if (bookToToggle) {
+      bookToToggle.toggleReadStatus();
     }
-
-    tr.appendChild(cellRead);
-
-    const cellDelete = document.createElement("td");
-    tr.appendChild(cellDelete);
-
-    const deleteBtn = document.createElement("button");
-    deleteBtn.classList.add("delete-btn");
-    deleteBtn.textContent = "Delete book";
-
-    cellDelete.appendChild(deleteBtn);
-
-    const cellToggleRead = document.createElement("td");
-    tr.appendChild(cellToggleRead);
-
-    const toggleRead = document.createElement("input");
-    toggleRead.classList.add("toggle-read-btn");
-    toggleRead.type = "checkbox";
-
-    cellToggleRead.appendChild(toggleRead);
-  });
+  }
 }
+
+const lib = new Library(myLibrary);
 
 addBookBtn.addEventListener("click", () => {
   form.classList.remove("hidden");
@@ -87,8 +110,8 @@ form.addEventListener("submit", (e) => {
   const newPages = pagesInput.value;
   const isRead = readInput.checked;
 
-  addBookToLibrary(newTitle, newAuthor, newPages, isRead);
-  showBooks(myLibrary);
+  lib.addBookToLibrary(newTitle, newAuthor, newPages, isRead);
+  lib.showBooks();
 
   form.reset();
 });
@@ -97,16 +120,11 @@ tbody.addEventListener("click", (e) => {
   if (e.target.classList.contains("delete-btn")) {
     const removeBook = e.target.closest("tr").dataset.id;
 
-    myLibrary = myLibrary.filter((book) => book.id !== removeBook);
-    showBooks(myLibrary);
+    lib.removeBookById(removeBook);
+    lib.showBooks();
   } else if (e.target.classList.contains("toggle-read-btn")) {
     const changeBook = e.target.closest("tr").dataset.id;
-    const changeBookStatus = myLibrary.find((book) => book.id == changeBook);
-    changeBookStatus.toggleReadStatus();
-    showBooks(myLibrary);
+    lib.toggleBookReadStatus(changeBook);
+    lib.showBooks();
   }
 });
-
-Book.prototype.toggleReadStatus = function () {
-  this.read = !this.read;
-};
